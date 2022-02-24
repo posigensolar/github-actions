@@ -51,7 +51,7 @@ jobs:
     # Clean env
 
     - name: Terraform Set Variables
-      run: export TF_CLI_ARGS_init='{{ inputs.cli-args }}'
+      run: export TF_CLI_ARGS_init='${{ inputs.cli-args }}'
 
     - name: Terraform Clean All
       run: yarn tfclean
@@ -60,5 +60,5 @@ jobs:
       run: cd terraform && terraform init
 
     - name: Terraform Apply
-      run: TF_VAR_env_name='{{ inputs.env }}' TF_VAR_project_id='{{ inputs.project }}' terraform apply
+      run: TF_VAR_env_name='${{ inputs.env }}' TF_VAR_project_id='${{ inputs.project }}' terraform apply
 
