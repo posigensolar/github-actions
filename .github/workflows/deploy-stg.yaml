@@ -1,0 +1,55 @@
+name: 'Deploy Staging'
+
+on:
+  workflow_call:
+    inputs:
+      review-state:
+
+jobs:
+  deployStaging:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v2
+
+     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.0.10
+
+     # Auth Google service account
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v0'
+      with:
+        credentials_json: '${{ secrets.STG_GOOGLE_CREDENTIALS }}'
+
+      # Init SDK
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v0'
+
+      # On push to main, build or change infrastructure according to Terraform configuration files
+      # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
+    # Clean env
+
+    - name: Terraform Set Variables
+      run: export TF_CLI_ARGS_init='-backend-config=\"bucket=stg-tfstate-posigen\"'
+
+    - name: Terraform Clean All
+      run: yarn tfclean
+
+    - name: Terraform Init
+      run: cd terraform && terraform init
+
+    - name: Terraform Apply Staging
+      run: TF_VAR_env_name=stg TF_VAR_project_id=stg-posigen terraform apply
+
+      
