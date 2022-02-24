@@ -2,9 +2,9 @@ name: 'Deploy Staging'
 
 on:
   workflow_call:
-    inputs:
-      review-state:
-
+    secrets:
+      STG_GOOGLE_CREDENTIALS:
+        required: true
 jobs:
   deployStaging:
     name: 'Terraform'
@@ -52,4 +52,3 @@ jobs:
     - name: Terraform Apply Staging
       run: TF_VAR_env_name=stg TF_VAR_project_id=stg-posigen terraform apply
 
-      
