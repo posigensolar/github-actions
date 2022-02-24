@@ -2,6 +2,13 @@ name: 'Deploy Staging'
 
 on:
   workflow_call:
+    inputs:
+      env:
+        required: true
+        type: string
+      projectId:
+        required: true
+        type: string
     secrets:
       STG_GOOGLE_CREDENTIALS:
         required: true
@@ -50,5 +57,5 @@ jobs:
       run: cd terraform && terraform init
 
     - name: Terraform Apply Staging
-      run: TF_VAR_env_name=stg TF_VAR_project_id=stg-posigen terraform apply
+      run: TF_VAR_env_name='{{ inputs.env }}' TF_VAR_project_id='{{ inputs.project }}' terraform apply
 
