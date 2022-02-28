@@ -56,12 +56,9 @@ jobs:
     - name: Terraform Clean All
       run: yarn tfclean
 
-    - name: CD Terraform
-      run: cd terraform
-
     - name: Terraform Init
-      run: terraform init
+      run: cd terraform && terraform init
 
     - name: Terraform Apply
-      run: TF_VAR_env_name='${{ inputs.env }}' TF_VAR_project_id='${{ inputs.projectId }}' terraform apply -auto-approve
+      run: cd terraform && TF_VAR_env_name='${{ inputs.env }}' TF_VAR_project_id='${{ inputs.projectId }}' terraform apply -auto-approve
 
