@@ -3,7 +3,7 @@ name: 'GCP Pull Request CI'
 on:
   workflow_call:
     inputs:
-      state:
+      event:
         required: true
         type: string
       stg-env:
@@ -33,7 +33,7 @@ on:
         type: string  
 jobs:
   deploy-stg:
-    if: inputs.state == 'approved'
+    if: fromJSON(inputs.event).review.state == 'approved'
     name: 'Terraform'
     runs-on: ubuntu-latest
 
@@ -78,7 +78,7 @@ jobs:
 
   deploy-prod:
     needs: deploy-stg
-    if: contains( inputs.event.pull_request.labels.*.name, 'deploy-prd') && inputs.state == 'approved'
+    if: contains( fromJSON(inputs.event).pull_request.labels.*.name, 'deploy-prd') && fromJSON(inputs.event).review.state == 'approved'
     name: 'Terraform'
     runs-on: ubuntu-latest
 
@@ -123,7 +123,7 @@ jobs:
 
   merge:
     needs: deploy-prod
-    if: contains( inputs.event.pull_request.labels.*.name, 'deploy-prd') && inputs.state == 'approved'
+    if: contains( fromJSON(inputs.event).pull_request.labels.*.name, 'deploy-prd') && fromJSON(inputs.event).review.state == 'approved'
     runs-on: ubuntu-latest
     steps:
       # Checkout the repository to the GitHub Actions runner
@@ -135,11 +135,11 @@ jobs:
         uses: juliangruber/merge-pull-request-action@v1
         with:
           github-token: ${{ secrets.token }}
-          number: ${{ inputs.event.pull_request.number }}
+          number: ${{ fromJSON(inputs.event).pull_request.number }}
           method: squash
       - name: Delete PRs head branches
         uses: dawidd6/action-delete-branch@v3
         with:
           github_token: ${{ secrets.token }}
-          numbers: ${{ inputs.event.pull_request.number }}
+          numbers: ${{ fromJSON(inputs.event).pull_request.number }}
 
