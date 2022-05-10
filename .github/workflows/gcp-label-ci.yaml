@@ -6,7 +6,7 @@ on:
       repo:
         required: true
         type: string
-      event:
+      pull-request-number:
         required: true
         type: string
       deploy-prod:

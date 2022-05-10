@@ -3,9 +3,6 @@ name: 'GCP Pull Request CI'
 on:
   workflow_call:
     inputs:
-      event:
-        required: true
-        type: string
       stg-env:
         required: true
         type: string
