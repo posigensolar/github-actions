@@ -21,16 +21,12 @@ on:
         required: true
       stg-projectId:
         required: true
-        type: string
       stg-cli-args:
         required: true
-        type: string
       prd-projectId:
         required: true
-        type: string
       prd-cli-args:
         required: true
-        type: string  
 jobs:
   deploy-stg:
     if: fromJSON(inputs.event).review.state == 'approved'
