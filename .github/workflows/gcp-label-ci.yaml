@@ -6,9 +6,9 @@ on:
       repo:
         required: true
         type: string
-      event:
+      state:
         required: true
-        type: object
+        type: string
       stg-env:
         required: true
         type: string
