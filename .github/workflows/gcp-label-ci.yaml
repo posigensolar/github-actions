@@ -12,21 +12,9 @@ on:
       stg-env:
         required: true
         type: string
-      stg-projectId:
-        required: true
-        type: string
-      stg-cli-args:
-        required: true
-        type: string
       prd-env:
         required: true
-        type: string
-      prd-projectId:
-        required: true
-        type: string
-      prd-cli-args:
-        required: true
-        type: string        
+        type: string      
     secrets:
       STG_GOOGLE_CREDENTIALS:
         required: true
@@ -34,6 +22,18 @@ on:
         required: true
       token:
         required: true
+      stg-projectId:
+        required: true
+        type: string
+      stg-cli-args:
+        required: true
+        type: string
+      prd-projectId:
+        required: true
+        type: string
+      prd-cli-args:
+        required: true
+        type: string  
 jobs: 
   deploy-stg:
     if: contains( inputs.event.pull_request.labels.*.name, 'deploy-prd')
@@ -74,10 +74,10 @@ jobs:
       run: yarn tfclean
 
     - name: Terraform Init
-      run: export TF_CLI_ARGS_init=${{inputs.stg-cli-args}} && cd terraform && terraform init
+      run: export TF_CLI_ARGS_init=${{secrets.stg-cli-args}} && cd terraform && terraform init
 
     - name: Terraform Apply
-      run: cd terraform && TF_VAR_env_name='${{ inputs.stg-env }}' TF_VAR_project_id='${{ inputs.stg-projectId }}' terraform apply -auto-approve
+      run: cd terraform && TF_VAR_env_name='${{ inputs.stg-env }}' TF_VAR_project_id='${{ secrets.stg-projectId }}' terraform apply -auto-approve
 
   check-for-deploy-prd:
     needs: deploy-stg
@@ -139,10 +139,10 @@ jobs:
       run: yarn tfclean
 
     - name: Terraform Init
-      run: export TF_CLI_ARGS_init=${{inputs.prd-cli-args}} && cd terraform && terraform init
+      run: export TF_CLI_ARGS_init=${{secrets.prd-cli-args}} && cd terraform && terraform init
 
     - name: Terraform Apply
-      run: cd terraform && TF_VAR_env_name='${{ inputs.prd-env }}' TF_VAR_project_id='${{ inputs.prd-projectId }}' terraform apply -auto-approve
+      run: cd terraform && TF_VAR_env_name='${{ inputs.prd-env }}' TF_VAR_project_id='${{ secrets.prd-projectId }}' terraform apply -auto-approve
 
   merge:
     needs: deploy-prod
