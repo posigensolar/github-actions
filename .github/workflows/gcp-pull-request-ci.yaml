@@ -44,7 +44,8 @@ jobs:
       # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v2
-
+      with:
+        persist-credentials: false
       # token
     - run: git config --global url."https://${{ secrets.token }}@github.com/".insteadOf ssh://git@github.com/
 
