@@ -20,6 +20,8 @@ on:
         required: true
       PRD_GOOGLE_CREDENTIALS:
         required: true
+      PAT:
+        required: true
       token:
         required: true
       stg-projectId:
@@ -46,8 +48,9 @@ jobs:
       uses: actions/checkout@v2
       with:
         persist-credentials: false
-      # token
-    - run: git config --global url."https://${{ secrets.token }}@github.com/".insteadOf ssh://git@github.com/
+        
+      # PAT
+    - run: git config --global url."https://${{ secrets.PAT }}@github.com/".insteadOf ssh://git@github.com/
 
      # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
@@ -99,8 +102,8 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-      # token
-    - run: git config --global url."https://${{ secrets.token }}@github.com/".insteadOf ssh://git@github.com/
+      # PAT
+    - run: git config --global url."https://${{ secrets.PAT }}@github.com/".insteadOf ssh://git@github.com/
 
      # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
