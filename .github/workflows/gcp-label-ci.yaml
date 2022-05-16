@@ -33,6 +33,8 @@ on:
         required: true
       prd-cli-args:
         required: true
+      pat:
+        required: true
 jobs: 
   deploy-stg:
     name: 'Terraform'
@@ -47,6 +49,9 @@ jobs:
       # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v2
+
+      # PAT
+    - run: echo @posigensolar:registry=https://npm.pkg.github.com > ./.npmrc && echo //npm.pkg.github.com/:_authToken=${{ secrets.PAT }} >> ./.npmrc
 
      # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
@@ -117,6 +122,9 @@ jobs:
       # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v2
+
+      # PAT
+    - run: echo @posigensolar:registry=https://npm.pkg.github.com > ./.npmrc && echo //npm.pkg.github.com/:_authToken=${{ secrets.PAT }} >> ./.npmrc
 
      # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
