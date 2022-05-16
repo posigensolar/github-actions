@@ -99,7 +99,7 @@ jobs:
     - uses: octokit/request-action@v2.x
       id: get_approved_prs
       with:
-        route: GET /repos/${{inputs.repository}}/pulls/${{inputs.pull-request-number}}/reviews
+        route: GET /repos/${{inputs.repo}}/pulls/${{inputs.pull-request-number}}/reviews
       env:
         GITHUB_TOKEN: ${{ secrets.token }}
   deploy-prod:
